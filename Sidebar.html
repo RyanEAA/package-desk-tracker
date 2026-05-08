@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <body>
+
+    <div id="preview"
+         style="
+           width:100%;
+           min-height:300px;
+           border:1px solid #ccc;
+           display:flex;
+           align-items:center;
+           justify-content:center;
+           background:#FFFFFF;
+         ">
+    </div>
+
+    <script>
+
+      google.script.run
+        .withSuccessHandler(renderSvg)
+        .getSelectedCellValue();
+
+      function renderSvg(value) {
+
+        console.log(value);
+
+        if (!value.startsWith("data:image/svg+xml;base64,")) {
+
+          document.getElementById("preview").innerHTML =
+            "<p>No SVG selected.</p>";
+
+          return;
+        }
+
+        document.getElementById("preview").innerHTML =
+        atob(value.split(",")[1]);
+      }
+
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+      /* Mobile-first, Google-Forms-ish */
+      :root{
+        --bg: #f1f3f4;
+        --card: #ffffff;
+        --text: #202124;
+        --muted: #5f6368;
+        --border: #dadce0;
+        --focus: #1a73e8;
+        --btn: #1a73e8;
+        --btnText: #ffffff;
+        --radius: 14px;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      .page {
+        min-height: 100vh;
+        padding: 18px 12px 40px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .formShell {
+        width: 100%;
+        max-width: 560px;
+      }
+
+      .headerCard {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 16px 14px;
+        border-top: 10px solid var(--focus);
+        margin-bottom: 12px;
+      }
+
+      h1 {
+        margin: 0 0 6px;
+        font-size: 22px;
+        line-height: 1.2;
+        font-weight: 750;
+      }
+
+      .sub {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.35;
+      }
+
+      .tabRow{
+        display: flex;
+        gap: 8px;
+        margin: 10px 0 12px;
+      }
+
+      .tabBtn{
+        flex: 1;
+        padding: 10px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: #ffffff;
+        color: var(--text);
+        font-weight: 750;
+        cursor: pointer;
+      }
+
+      .tabBtn.active{
+        background: #e8f0fe;
+        border-color: #c6dafc;
+        color: var(--focus);
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 14px 16px;
+      }
+
+      .field {
+        margin-top: 12px;
+      }
+
+      label {
+        display: block;
+        font-size: 13px;
+        font-weight: 650;
+        margin-bottom: 8px;
+      }
+
+      .req {
+        color: #d93025;
+        margin-left: 6px;
+      }
+
+      input, select {
+        width: 100%;
+        font-size: 16px; /* prevents iOS zoom */
+        padding: 12px 12px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #fff;
+        color: var(--text);
+        outline: none;
+      }
+
+      input:focus, select:focus {
+        border-color: var(--focus);
+        box-shadow: 0 0 0 3px rgba(26,115,232,0.15);
+      }
+
+      .help {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.35;
+      }
+
+      .actions {
+        margin-top: 16px;
+      }
+
+      button.primary {
+        width: 100%;
+        padding: 12px 14px;
+        border: 0;
+        border-radius: 999px;
+        background: var(--btn);
+        color: var(--btnText);
+        font-size: 15px;
+        font-weight: 750;
+        cursor: pointer;
+      }
+
+      button.primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      /* Messages */
+      .msg {
+        margin-top: 12px;
+        padding: 12px 12px;
+        border-radius: 12px;
+        display: none;
+        font-size: 13px;
+        line-height: 1.35;
+      }
+
+      .ok {
+        background: #e6f4ea;
+        border: 1px solid #b7dfc3;
+        color: #0b4f2f;
+      }
+
+      .err {
+        background: #fce8e6;
+        border: 1px solid #f6b8b3;
+        color: #7a1b13;
+      }
+
+      .divider {
+        height: 1px;
+        background: var(--border);
+        margin: 14px 0;
+      }
+
+      /* Table */
+      .tableWrap{
+        margin-top: 14px;
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        min-width: 520px; /* lets mobile scroll horizontally if needed */
+      }
+
+      thead th {
+        text-align: left;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        padding: 10px 6px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      tbody td {
+        padding: 10px 6px;
+        border-bottom: 1px solid #eee;
+        vertical-align: top;
+      }
+
+      .pill {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: #eef1f4;
+        color: #3c4043;
+        font-weight: 750;
+        font-size: 12px;
+      }
+
+      @media (min-width: 700px) {
+        .page { padding-top: 26px; }
+        .headerCard { padding: 18px 18px 16px; }
+        .card { padding: 16px 18px 18px; }
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+    <link rel="icon" href="https://drive.google.com/file/d/1uBJx8YoFXVekwoKc1v0dWDhtL5f8D5k4/view?usp=sharing">
+
+  </head>
+
+  <body>
+    <div id="toast" style="
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: #202124;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 650;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+      display: none;
+      z-index: 9999;
+      ">
+      Delivery added!
+    </div>
+    <div class="page">
+      <div class="formShell">
+        <div class="headerCard">
+          <h1>Mail Desk Tracker</h1>
+          <p class="sub">
+            Receive deliveries and search packages that have not been picked up yet.
+            Fields marked with <span class="req">*</span> are required.
+          </p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabRow">
+          <button type="button" id="tabReceive" class="tabBtn active" onclick="showView('receive')">Receive</button>
+          <button type="button" id="tabSearch" class="tabBtn" onclick="showView('search')">Search</button>
+        </div>
+
+        <!-- RECEIVE VIEW -->
+        <div id="viewReceive">
+          <div class="card">
+            <h1 style="margin:0 0 6px;">Check In Mail</h1>
+            <p class="sub">Add a package or letter that just arrived at the desk.</p>
+
+            <div class="field">
+              <label for="firstName">Resident first name<span class="req">*</span></label>
+              <input id="firstName" placeholder="e.g., John" autocomplete="given-name" />
+            </div>
+
+            <div class="field">
+              <label for="lastName">Resident last name<span class="req">*</span></label>
+              <input id="lastName" placeholder="e.g., Smith" autocomplete="family-name" />
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="field">
+              <label for="type">Type<span class="req">*</span></label>
+              <select id="type" onchange="onTypeChange()">
+                <option value="PACKAGE">Package</option>
+                <option value="LETTER">Letter</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="tracking">Tracking number
+                <span id="trackingReq" class="req" style="display:none;">*</span>
+              </label>
+              <input id="tracking" placeholder="e.g., 1Z..." autocomplete="off" />
+              <div class="help" id="trackingHelp">Required for packages. Optional for letters.</div>
+            </div>
+
+            <div class="actions">
+              <button id="btnSubmit" class="primary" onclick="submitDelivery()">Add delivery</button>
+            </div>
+
+            <div id="msgOk" class="msg ok">
+              <span id="okText"></span>
+              <div style="margin-top:10px;">
+                <button type="button" class="primary" onclick="resetForm()">Enter more mail</button>
+              </div>
+            </div>
+
+            <div id="msgErr" class="msg err"></div>
+
+            <div class="help" style="margin-top:12px;">
+              Tip: If you select <b>Letter</b>, tracking number can be blank.
+            </div>
+          </div>
+        </div>
+
+        <!-- SEARCH VIEW -->
+        <div id="viewSearch" style="display:none;">
+          <div class="card">
+            <h1 style="margin:0 0 6px;">Search Mail</h1>
+            <p class="sub">Find deliveries that arrived and have not been picked up yet.</p>
+
+            <div class="field">
+              <label for="searchFirst">Resident first name</label>
+              <input id="searchFirst" placeholder="e.g., John" />
+            </div>
+
+            <div class="field">
+              <label for="searchLast">Resident last name</label>
+              <input id="searchLast" placeholder="e.g., Smith" />
+            </div>
+
+            <div class="actions">
+              <button id="btnSearch" class="primary" type="button" onclick="runSearch()">Search</button>
+            </div>
+
+            <div id="searchMsgErr" class="msg err"></div>
+
+            <div class="tableWrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:40px">
+                      <input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)"/>
+                    </th>
+                    <th>Resident</th>
+                    <th>Type</th>
+                    <th>Tracking</th>
+                    <th>Arrived</th>
+                  </tr>
+                </thead>
+                <tbody id="resultsBody">
+                  <tr>
+                    <td colspan="6" style="padding:12px 6px; color:#5f6368;">
+                      Run a search to see packages.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div id="checkoutPanel" class="card" style="margin-top:12px; display:none;">
+                <h1 style="margin:0 0 6px;">Checkout selected</h1>
+                <p class="sub"><span id="selectedCount">0</span> selected. Resident signs once for all selected items.</p>
+
+                <div class="field">
+                  <label>Resident signature<span class="req">*</span></label>
+                  <div style="border:1px solid var(--border); border-radius:12px; overflow:hidden; background:#fff;">
+                    <canvas id="sigCanvas" style="width:100%; height:220px; display:block; touch-action:none;"></canvas>
+                  </div>
+                  <div class="help">Tip: rotate your phone to landscape for more space.</div>
+                </div>
+
+                <div style="display:flex; gap:8px; margin-top:10px;">
+                  <button type="button" class="primary" style="background:#5f6368;" onclick="clearSignature()">Clear</button>
+                  <button type="button" class="primary" id="btnCheckout" onclick="submitCheckout()">Checkout</button>
+                </div>
+
+                <div id="checkoutErr" class="msg err"></div>
+              </div>
+            </div>
+
+            <div class="help" style="margin-top:12px;">
+              Tip: Leave both fields blank and click Search to show all current packages.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+
+      // SIGNATURE
+      // ---- Selection state ----
+      const selectedIds = new Set();
+      let sigPad = null;
+
+      function toggleSelectAll(cb) {
+        const checks = document.querySelectorAll('input[data-delivery-id]');
+        for (const c of checks) {
+          c.checked = cb.checked;
+          const id = c.getAttribute('data-delivery-id');
+          if (cb.checked) selectedIds.add(id);
+          else selectedIds.delete(id);
+        }
+        updateCheckoutUI();
+      }
+
+      function signaturePointsToSvgDataUri(data) {
+
+        let path = "";
+
+        let minX = Infinity;
+        let minY = Infinity;
+        let maxX = -Infinity;
+        let maxY = -Infinity;
+
+        for (const stroke of data) {
+
+          const pts = stroke.points;
+
+          if (!pts || !pts.length) continue;
+
+          path += `M ${pts[0].x} ${pts[0].y} `;
+
+          for (let i = 1; i < pts.length; i++) {
+
+            const p = pts[i];
+
+            minX = Math.min(minX, p.x);
+            minY = Math.min(minY, p.y);
+            maxX = Math.max(maxX, p.x);
+            maxY = Math.max(maxY, p.y);
+
+            path += `L ${p.x} ${p.y} `;
+          }
+        }
+
+        // fallback if no points
+        if (!isFinite(minX)) {
+
+          minX = 0;
+          minY = 0;
+          maxX = 300;
+          maxY = 120;
+        }
+
+        const padding = 10;
+
+        const width = (maxX - minX) + padding * 2;
+        const height = (maxY - minY) + padding * 2;
+
+        const svg = `
+          <svg xmlns="http://www.w3.org/2000/svg"
+              width="${width}"
+              height="${height}"
+              viewBox="${minX - padding} ${minY - padding} ${width} ${height}">
+
+            <path
+              d="${path}"
+              stroke="black"
+              stroke-width="2"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+
+          </svg>
+        `;
+
+        return "data:image/svg+xml;base64," + btoa(svg);
+      }
+
+      function onRowCheckChanged(cb) {
+        const id = cb.getAttribute('data-delivery-id');
+        if (cb.checked) selectedIds.add(id);
+        else selectedIds.delete(id);
+
+        // Update Select All checkbox
+        const checks = document.querySelectorAll('input[data-delivery-id]');
+        const all = document.getElementById('selectAll');
+        if (checks.length) {
+          all.checked = Array.from(checks).every(x => x.checked);
+          all.indeterminate = !all.checked && Array.from(checks).some(x => x.checked);
+        }
+
+        updateCheckoutUI();
+      }
+
+      function updateCheckoutUI() {
+        const panel = document.getElementById('checkoutPanel');
+        const countEl = document.getElementById('selectedCount');
+        const err = document.getElementById('checkoutErr');
+        err.style.display = 'none';
+
+        countEl.textContent = String(selectedIds.size);
+
+        if (selectedIds.size === 0) {
+          panel.style.display = 'none';
+          return;
+        }
+
+        panel.style.display = 'block';
+        initSignaturePadIfNeeded();
+        fitSigCanvas();
+      }
+
+      // ---- Signature pad ----
+      function initSignaturePadIfNeeded() {
+        if (sigPad) return;
+
+        const canvas = document.getElementById('sigCanvas');
+        sigPad = new SignaturePad(canvas, {
+          minWidth: 0.8,
+          maxWidth: 2.2,
+          penColor: 'black',
+          backgroundColor: 'rgba(255,255,255,1)',
+        });
+
+        window.addEventListener('resize', fitSigCanvas);
+        window.addEventListener('orientationchange', fitSigCanvas);
+      }
+
+      function fitSigCanvas() {
+        const canvas = document.getElementById('sigCanvas');
+        if (!canvas) return;
+
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight;
+
+        // keep current drawing if possible:
+        const data = sigPad && !sigPad.isEmpty() ? sigPad.toData() : null;
+
+        canvas.width = w * ratio;
+        canvas.height = h * ratio;
+        const ctx = canvas.getContext('2d');
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+        if (sigPad) {
+          sigPad.clear();
+          if (data) sigPad.fromData(data);
+        }
+      }
+
+      function clearSignature() {
+        if (sigPad) sigPad.clear();
+        const err = document.getElementById('checkoutErr');
+        err.style.display = 'none';
+      }
+
+      // ---- Checkout submit ----
+      function clearSearchPackageView() {
+        // clear search inputs
+        document.getElementById('searchFirst').value = '';
+        document.getElementById('searchLast').value = '';
+
+        // clear results table
+        const body = document.getElementById('resultsBody');
+        body.innerHTML = `
+          <tr>
+            <td colspan="6" style="padding:12px 6px; color:#5f6368;">
+              Run a search to see packages.
+            </td>
+          </tr>`;
+
+        // Reset selection state
+        selectedIds.clear();
+
+        const selectAll = document.getElementById('selectAll');
+        if (selectAll) {
+          selectAll.checked = false;
+          selectAll.indeterminate = false;
+        }
+
+        // Hide checkout panel
+        document.getElementById('checkoutPanel').style.display = 'none';
+
+        // Clear checkout inputs
+        document.getElementById('checkoutBy').value = '';
+        clearSignature();
+
+        // Clear checkout error
+        const err = document.getElementById('checkoutErr');
+        err.style.display = 'none';
+      }
+
+      function setCheckoutLoading(isLoading) {
+        const btn = document.getElementById('btnCheckout');
+        btn.disabled = isLoading;
+        btn.textContent = isLoading ? 'Checking out…' : 'Checkout';
+      }
+
+      function submitCheckout() {
+        const err = document.getElementById('checkoutErr');
+        err.style.display = 'none';
+
+        if (!sigPad || sigPad.isEmpty()) {
+          err.textContent = '❌ Signature is required.';
+          err.style.display = 'block';
+          return;
+        }
+
+        const svgDataUri =
+          signaturePointsToSvgDataUri(sigPad.toData());
+
+        const payload = {
+          ids: Array.from(selectedIds),
+          signature_svg_url: svgDataUri
+        };
+
+        setCheckoutLoading(true);
+
+        google.script.run
+          .withSuccessHandler((res) => {
+            setCheckoutLoading(false);
+
+            // success toast + refresh results
+            showToast(`✅ Checked out ${res.updated} item(s)`);
+
+            // Clear selection + signature
+            selectedIds.clear();
+            document.getElementById('selectAll').checked = false;
+            document.getElementById('selectAll').indeterminate = false;
+            clearSignature();
+
+            clearSearchPackageView();
+          })
+          .withFailureHandler((e) => {
+            setCheckoutLoading(false);
+            err.textContent = '❌ ' + (e?.message || e);
+            err.style.display = 'block';
+          })
+          .checkoutSelected(payload);
+      }
+
+      // TOAST POP UP
+      let toastTimer = null;
+      function showToast(message, ms=600){
+        const t = document.getElementById('toast');
+        t.textContent = message;
+
+        // show
+        t.style.display = 'block';
+        t.style.opacity = '1';
+
+        // reset timer
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          t.style.display = 'none';
+        }, ms);
+      }
+      /***********************
+       * Tabs / Views
+       ***********************/
+      function showView(which) {
+        const r = document.getElementById('viewReceive');
+        const s = document.getElementById('viewSearch');
+        const tabR = document.getElementById('tabReceive');
+        const tabS = document.getElementById('tabSearch');
+
+        const isReceive = which === 'receive';
+        r.style.display = isReceive ? '' : 'none';
+        s.style.display = isReceive ? 'none' : '';
+
+        tabR.classList.toggle('active', isReceive);
+        tabS.classList.toggle('active', !isReceive);
+
+        // Hide any lingering errors when switching
+        document.getElementById('searchMsgErr').style.display = 'none';
+        document.getElementById('msgErr').style.display = 'none';
+      }
+
+      /***********************
+       * Receive form helpers
+       ***********************/
+      function showOk(text) {
+        const ok = document.getElementById('msgOk');
+        const err = document.getElementById('msgErr');
+        err.style.display = 'none';
+        document.getElementById('okText').textContent = text;
+        ok.style.display = 'block';
+      }
+
+      function showErr(text) {
+        const ok = document.getElementById('msgOk');
+        const err = document.getElementById('msgErr');
+        ok.style.display = 'none';
+        err.textContent = text;
+        err.style.display = 'block';
+      }
+
+      function setLoading(isLoading) {
+        const btn = document.getElementById('btnSubmit');
+        btn.disabled = isLoading;
+        btn.textContent = isLoading ? 'Adding…' : 'Add delivery';
+      }
+
+      function onTypeChange() {
+        const type = document.getElementById('type').value;
+        const tracking = document.getElementById('tracking');
+        const trackingReq = document.getElementById('trackingReq');
+        const trackingHelp = document.getElementById('trackingHelp');
+
+        if (type === 'LETTER') {
+          tracking.placeholder = '(optional for letters)';
+          trackingHelp.textContent = 'Optional for letters.';
+          trackingReq.style.display = 'none';
+
+        } else {
+          tracking.placeholder = 'e.g., 1Z...';
+          trackingHelp.textContent = 'Required for packages.';
+          trackingReq.style.display = 'inline';
+        }
+      }
+
+      function resetForm() {
+        document.getElementById('firstName').value = '';
+        document.getElementById('lastName').value = '';
+        document.getElementById('type').value = 'PACKAGE';
+        document.getElementById('tracking').value = '';
+
+        onTypeChange();
+
+        document.getElementById('msgOk').style.display = 'none';
+        document.getElementById('msgErr').style.display = 'none';
+
+        const btn = document.getElementById('btnSubmit');
+        btn.disabled = false;
+        btn.textContent = 'Add delivery';
+
+        document.getElementById('firstName').focus();
+      }
+
+      function submitDelivery() {
+        document.getElementById('msgOk').style.display = 'none';
+        document.getElementById('msgErr').style.display = 'none';
+
+        const data = {
+          first_name: document.getElementById('firstName').value,
+          last_name: document.getElementById('lastName').value,
+          type: document.getElementById('type').value,
+          tracking_number: document.getElementById('tracking').value,
+        };
+
+        setLoading(true);
+
+        google.script.run
+          .withSuccessHandler(() => {
+            setLoading(false);
+            
+            // clear form
+            resetForm();
+
+            // show pop-up
+            showToast('✅ Delivery added!');
+          })
+          .withFailureHandler((err) => {
+            setLoading(false);
+            showErr('❌ ' + (err?.message || err));
+          })
+          .addDelivery(data);
+      }
+
+      /***********************
+       * Search packages
+       ***********************/
+      function setSearchLoading(isLoading) {
+        const btn = document.getElementById('btnSearch');
+        btn.disabled = isLoading;
+        btn.textContent = isLoading ? 'Searching…' : 'Search';
+      }
+
+      function runSearch() {
+        const err = document.getElementById('searchMsgErr');
+        err.style.display = 'none';
+
+        const query = {
+          first_name: document.getElementById('searchFirst').value,
+          last_name: document.getElementById('searchLast').value,
+        };
+
+        setSearchLoading(true);
+
+        google.script.run
+          .withSuccessHandler((rows) => {
+            setSearchLoading(false);
+            renderResults(rows || []);
+          })
+          .withFailureHandler((e) => {
+            setSearchLoading(false);
+            err.textContent = '❌ ' + (e?.message || e);
+            err.style.display = 'block';
+          })
+          .searchPackages(query);
+      }
+
+      function renderResults(rows) {
+        const body = document.getElementById('resultsBody');
+        body.innerHTML = '';
+
+        // reset selection state every time new results render
+        selectedIds.clear();
+        const all = document.getElementById('selectAll');
+        if (all) { all.checked = false; all.indeterminate = false; }
+        updateCheckoutUI();
+
+        if (!rows.length) {
+          body.innerHTML = `
+            <tr>
+              <td colspan="6" style="padding:12px 6px; color:#5f6368;">No packages found.</td>
+            </tr>`;
+          return;
+        }
+
+        for (const r of rows) {
+          const id = String(r.id || '');
+          const name = `${escapeHtml(r.first_name)} ${escapeHtml(r.last_name)}`.trim();
+          const type = escapeHtml(r.type || '');
+          const tracking = escapeHtml(r.tracking_number || '');
+          const arrived = formatDate(r.arrived_at);
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>
+              <input type="checkbox"
+                    data-delivery-id="${escapeHtml(id)}"
+                    onclick="onRowCheckChanged(this)" />
+            </td>
+            <td>${name}</td>
+            <td><span class="pill">${type}</span></td>
+            <td>${tracking || '<span style="color:#5f6368;">(none)</span>'}</td>
+            <td>${arrived}</td>
+          `;
+          body.appendChild(tr);
+        }
+      }
+
+      function formatDate(val) {
+        if (!val) return '';
+        const d = new Date(val);
+        return isNaN(d.getTime()) ? String(val) : d.toLocaleString();
+      }
+
+      function escapeHtml(s) {
+        return String(s ?? '')
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#039;');
+      }
+
+      // Initialize placeholders/help text
+      onTypeChange();
+
+    </script>
+    <div style="
+      margin-top:24px;
+      text-align:center;
+      font-size:12px;
+      color:#5f6368;
+    ">
+      Made by
+      <a
+        href="https://github.com/YOUR_GITHUB"
+        target="_blank"
+        style="
+          color:#1a73e8;
+          text-decoration:none;
+          font-weight:600;
+        ">
+        Ryan Aparicio
+      </a>
+    </div>
+  </body>
+</html>
