@@ -72,9 +72,10 @@ Your `Deliveries` sheet must contain:
 | signature_url |
 | signed_at |
 
+in first row.
+
 ---
 
-in first row.
 
 ## Installation
 
